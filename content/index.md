@@ -2,8 +2,14 @@
 title: Welcome to doiotyourself.com
 ---
 
+![doiotyourself.com logo](https://raw.githubusercontent.com/doiotyourself/logo/main/doiotyourselfdotcom.svg)
+
 Hi, how are you? 
+
 I'm Josh. 
+
 Welcome to my digital garden. 
-Please take a look around — you should find all sorts of notes I've written and collected on the internet of things, home automation, self hosting, and other diy projects.
+
+Please take a look around — you're in a web of  notes that I've written and collected on topics such as: the internet of things, home automation, self hosting, and do it yourself projects.
+
 I hope you find something useful or entertaining. 
