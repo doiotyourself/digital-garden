@@ -2,6 +2,12 @@
 layout: post
 title: Double Proxy
 date: 2023-06-01
+alias:
+  - "Double-Proxy"
+tags:
+  - OPNsense
+  - Home Assistant
+  - Cloudflare
 ---
 
 So I have Nginx Proxy Manager running on OPNsense. Then I have Cloudflare proxying NPM. 

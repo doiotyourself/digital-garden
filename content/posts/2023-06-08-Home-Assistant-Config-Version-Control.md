@@ -1,8 +1,13 @@
 ---
 layout: post
-title: Home Assistant Config Version Control with git
+title: "Home Assistant Config Version Control with git"
 date: 2023-06-08
-draft: "true"
+draft: "false"
+alias:
+  - "Home-Assistant-Config-Version-Control"
+tags:
+  - git
+  - "Home Assistant"
 ---
 
 ## Create SSH Key
@@ -17,7 +22,7 @@ Your identification has been saved in /config/.ssh/id_rsa
 Your public key has been saved in /config/.ssh/id_rsa.pub
 ```
 
-# Setup Github
+## Setup Github
 
 1. create repo
 2. add ssh key
@@ -58,6 +63,7 @@ Initialized empty Git repository in /config/.git/
 1. bash script
 
     `/config/shell/git-push-config.sh`
+
     ```shell
     # Change directory to /config
     cd /config

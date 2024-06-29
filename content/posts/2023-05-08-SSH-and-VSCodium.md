@@ -2,6 +2,7 @@
 layout: post
 title: SSH and VSCodium
 date: 2023-05-08
+
 ---
 
 I want to access my servers via SSH in VSCodium. Let's setup a plain Debian 11 host and Home Assistant 10.

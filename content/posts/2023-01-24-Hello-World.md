@@ -1,7 +1,15 @@
 ---
 layout: post
-title: Hello World
+title: "Hello World"
 date: 2023-01-24
+alias:
+  - "Hello-World"
+tags:
+  - obsolete
+  - email
+  - GitHub
+  - Jekyll
+  - Cloudflare
 ---
 
 Welcome to my blog about the Internet of Things.

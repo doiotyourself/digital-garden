@@ -1,7 +1,12 @@
 ---
 layout: post
-title: Object type requires hosted I/O
+title: "Object type requires hosted I/O"
 date: 2023-02-02
+alias:
+  - "Object-type-requires-hosted-IO"
+tags:
+  - ESXi
+  - "Home Assistant"
 ---
 
 I have a reoccurring issue with my Home Assistant VM on ESXi. After the host is powered off ungracefully the VM will not power on, it errors: 

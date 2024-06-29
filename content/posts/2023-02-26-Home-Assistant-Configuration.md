@@ -2,6 +2,10 @@
 layout: post
 title: Home Assistant Configuration
 date: 2023-02-26
+alias:
+  - "Home-Assistant-Configuration"
+tags:
+  - "Home Assistant"
 ---
 
 ## Enable Advanced Mode

@@ -1,7 +1,11 @@
 ---
 layout: post
-title: Too Soon to Upgrade to ESXi 8.0
+title: "Too Soon to Upgrade to ESXi 8.0"
 date: 2023-01-29
+alias:
+  - "Too-Soon-to-Upgrade-to-ESXi-8.0"
+tags:
+  - ESXi
 ---
 
 There were a couple of big milestones for ESXi in October 2022, which prompted me to review my current ESXi 6.7U3 installation:

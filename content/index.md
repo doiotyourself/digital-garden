@@ -1,5 +1,7 @@
 ---
 title: Welcome to doiotyourself.com
+tags:
+  - evergreen
 ---
 Hi, how are you?
 

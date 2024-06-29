@@ -1,7 +1,13 @@
 ---
 layout: post
-title: Content Licence
+title: "Content Licence"
 date: 2023-02-01
+alias:
+  - "Content-Licence"
+tags:
+  - licence
+  - "public domain"
+  - CC0
 ---
 
 Today I have chosen to dedicate all of the content I create for this blog to the public domain.

@@ -1,7 +1,12 @@
 ---
 layout: post
-title: VSCodium Extensions
+title: "VSCodium Extensions"
 date: 2023-01-26
+alias:
+  - "VSCodium-Extensions"
+tags:
+  - VSCodium
+  - markdown
 ---
 
 A short post today to talk about a few VSCodium Extensions that increase my productivity.
