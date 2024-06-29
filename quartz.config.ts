@@ -5,6 +5,16 @@ import * as Plugin from "./quartz/plugins"
  * Quartz 4.0 Configuration
  *
  * See https://quartz.jzhao.xyz/configuration for more information.
+ * 
+ * darkMode
+ * 
+ * light: background
+ * lightgray: searchbox
+ * gray: date
+ * darkgray: body of text
+ * dark: heading
+ * secondary: link
+ * tertiary: mouse over link
  */
 const config: QuartzConfig = {
   configuration: {
@@ -38,10 +48,10 @@ const config: QuartzConfig = {
         darkMode: {
           light: "#232323",
           lightgray: "#2d2d2d",
-          gray: "#d6ccad",
-          darkgray: "#777777",
-          dark: "#806c44",
-          secondary: "#f1b144",
+          gray: "#806c44",
+          darkgray: "#d6ccad",
+          dark: "#ffffff",
+          secondary: "#44c608",
           tertiary: "#44c608",
           highlight: "rgba(128, 108, 68, 0.15)",
         },
