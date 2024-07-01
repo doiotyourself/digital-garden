@@ -24,7 +24,7 @@ export default ((opts?: Options) => {
             </li>
           ))}
           <li>|&nbsp;&nbsp;&nbsp;<a href="/index.xml"><i class="fa-solid fa-square-rss"></i> RSS</a></li>
-          <li>|&nbsp;&nbsp;&nbsp;{i18n(cfg.locale).components.footer.createdWith}{" "}<a href="https://quartz.jzhao.xyz/"> Quartz v{version}</a></li>
+          <li>|&nbsp;&nbsp;&nbsp;{i18n(cfg.locale).components.footer.createdWith}{" "}<a href="https://quartz.jzhao.xyz/"> 🪴 Quartz v{version}</a></li>
         </ul>
       </footer>
     )
