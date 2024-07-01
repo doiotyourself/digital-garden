@@ -20,11 +20,11 @@ export default ((opts?: Options) => {
           <li>|&nbsp;&nbsp;&nbsp;<a href="/privacy"><i class="fa-solid fa-user-ninja"></i> Privacy</a></li>
           {Object.entries(links).map(([text, detail]) => (
             <li>
-              |&nbsp;&nbsp;&nbsp;<a href={detail.link}><i class={detail.icon}></i>  {text}</a>
+              |&nbsp;&nbsp;&nbsp;<a href={detail.link}><i class={detail.icon}></i> {text}</a>
             </li>
           ))}
           <li>|&nbsp;&nbsp;&nbsp;<a href="/index.xml"><i class="fa-solid fa-square-rss"></i> RSS</a></li>
-          <li>|&nbsp;&nbsp;&nbsp;{i18n(cfg.locale).components.footer.createdWith}{" "}<a href="https://quartz.jzhao.xyz/"> 🪴 Quartz v{version}</a></li>
+          <li>|&nbsp;&nbsp;&nbsp;{i18n(cfg.locale).components.footer.createdWith}{" "}<a href="https://quartz.jzhao.xyz/"> 🪴 Quartz {version}</a></li>
         </ul>
       </footer>
     )
