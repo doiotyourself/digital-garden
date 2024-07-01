@@ -19,13 +19,13 @@ import * as Plugin from "./quartz/plugins"
 const config: QuartzConfig = {
   configuration: {
     pageTitle: "doiotyourself.com",
-    enableSPA: false,
+    enableSPA: true,
     enablePopovers: true,
     analytics: null,
     locale: "en-US",
     baseUrl: "www.doiotyourself.com",
     ignorePatterns: ["private", "templates", ".obsidian"],
-    defaultDateType: "published",
+    defaultDateType: "created",
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,
@@ -78,7 +78,9 @@ const config: QuartzConfig = {
       Plugin.Description(),
       Plugin.Latex({ renderEngine: "katex" }),
     ],
-    filters: [Plugin.RemoveDrafts()],
+    filters: [
+      Plugin.RemoveDrafts(),
+    ],
     emitters: [
       Plugin.AliasRedirects(),
       Plugin.ComponentResources(),
@@ -88,6 +90,9 @@ const config: QuartzConfig = {
       Plugin.ContentIndex({
         enableSiteMap: true,
         enableRSS: true,
+        rssFullHtml: true,
+        rssLimit: 8,
+        includeEmptyFiles: false,
       }),
       Plugin.Assets(),
       Plugin.Static(),
