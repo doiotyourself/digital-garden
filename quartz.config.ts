@@ -28,7 +28,7 @@ const config: QuartzConfig = {
     defaultDateType: "created",
     theme: {
       fontOrigin: "googleFonts",
-      cdnCaching: false,
+      cdnCaching: true,
       typography: {
         header: "M PLUS Rounded 1c",
         body: "M PLUS Rounded 1c",
