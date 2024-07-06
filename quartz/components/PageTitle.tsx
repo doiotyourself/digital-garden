@@ -9,7 +9,7 @@ const PageTitle: QuartzComponent = ({ fileData, cfg, displayClass }: QuartzCompo
   const logoPath = joinSegments(baseDir, "static/doiotyourselfdotcom.svg")
   return (
     <h1 class={classNames(displayClass, "page-title")}>
-      <a href={baseDir}><object type="image/svg+xml" data={logoPath} alt={title}></object></a>
+      <a href={baseDir}><img src={logoPath} alt={title}></img></a>
     </h1>
   )
 }

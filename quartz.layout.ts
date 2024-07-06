@@ -7,7 +7,10 @@ export const sharedPageComponents: SharedLayout = {
   header: [],
   footer: Component.Footer({
     links: {
-      GitHub: {link: "https://github.com/doiotyourself", icon: "/static/github-mark.svg#Layer_1",},
+      "About": {link: "/about", icon: "info",},
+      "Contact": {link: "/contact", icon: "contact_page",},
+      "RSS Feed": {link: "/index.xml", icon: "rss_feed",},
+      "Privacy": {link: "/privacy", icon: "fingerprint",},
     },
   }),
 }
