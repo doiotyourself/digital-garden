@@ -23,12 +23,12 @@ const config: QuartzConfig = {
     enablePopovers: true,
     analytics: null,
     locale: "en-US",
-    baseUrl: "www.doiotyourself.com",
+    baseUrl: "doiotyourself.com",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "created",
     theme: {
       fontOrigin: "googleFonts",
-      cdnCaching: true,
+      cdnCaching: false,
       typography: {
         header: "M PLUS Rounded 1c",
         body: "M PLUS Rounded 1c",

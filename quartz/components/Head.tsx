@@ -15,8 +15,8 @@ export default (() => {
     const path = url.pathname as FullSlug
     const baseDir = fileData.slug === "404" ? path : pathToRoot(fileData.slug!)
 
-    const iconPath = 'https://raw.githubusercontent.com/doiotyourself/logo/main/doiotyourselfdotcom96x96.svg'
-    const ogImagePath = 'https://raw.githubusercontent.com/doiotyourself/logo/main/doiotyourselfdotcom.svg'
+    const iconPath = joinSegments(baseDir, "static/doiotyourselfdotcom96x96.svg")
+    const ogImagePath = `https://${cfg.baseUrl}/static/doiotyourselfdotcom.svg`
 
     return (
       <head>
