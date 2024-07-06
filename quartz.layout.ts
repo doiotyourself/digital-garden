@@ -10,7 +10,8 @@ export const sharedPageComponents: SharedLayout = {
       "About": {link: "/about", icon: "info",},
       "Contact": {link: "/contact", icon: "contact_page",},
       "RSS Feed": {link: "/index.xml", icon: "rss_feed",},
-      "Privacy": {link: "/privacy", icon: "fingerprint",},
+      "Privacy": {link: "/privacy", icon: "fingerprint_off",},
+      "Source": {link: "https://github.com/doiotyourself/digital-garden", icon: "markdown",},
     },
   }),
 }

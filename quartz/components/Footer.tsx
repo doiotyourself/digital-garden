@@ -16,7 +16,7 @@ export default ((opts?: Options) => {
       <footer class={`${displayClass ?? ""}`}>
         <hr />
         <ul>
-          {Object.entries(links).map(([text, link]) => (
+          {Object.entries(links).map(([text, detail]) => (
             <li>
               |&nbsp;&nbsp;&nbsp;<a href={detail.link}><span class="material-icons">{detail.icon}</span> {text}</a>
             </li>
