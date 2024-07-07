@@ -22,6 +22,15 @@ const config: QuartzConfig = {
     enableSPA: true,
     enablePopovers: true,
     analytics: null,
+    discussion: {
+      provider: "giscus",
+      configuration: {
+        dataRepo: "doiotyourself/digital-garden",
+        dataRepoId: "R_kgDOMPURSQ",
+        dataCategory: "Announcements",
+        dataCategoryId: "DIC_kwDOMPURSc4CgoCL",
+      },
+    },
     locale: "en-US",
     baseUrl: "doiotyourself.com",
     ignorePatterns: ["private", "templates", ".obsidian"],

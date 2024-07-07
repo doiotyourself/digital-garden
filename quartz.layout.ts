@@ -36,6 +36,8 @@ export const defaultContentPageLayout: PageLayout = {
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Backlinks(),
   ],
+  //@ts-ignore
+  footer: Component.Discussion(),
 }
 
 // components for pages that display lists of pages  (e.g. tags or folders)
