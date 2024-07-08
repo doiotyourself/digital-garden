@@ -7,11 +7,11 @@ export const sharedPageComponents: SharedLayout = {
   header: [],
   footer: Component.Footer({
     links: {
-      "About": {link: "/about", icon: "info",},
-      "Contact": {link: "/contact", icon: "contact_page",},
-      "RSS Feed": {link: "/index.xml", icon: "rss_feed",},
-      "Privacy": {link: "/privacy", icon: "fingerprint",},
-      "Source": {link: "https://github.com/doiotyourself/digital-garden", icon: "code",},
+      "About": {link: "/about", icon: "svg-icon about",},
+      "Contact": {link: "/contact", icon: "svg-icon email",},
+      "RSS Feed": {link: "/index.xml", icon: "svg-icon rss",},
+      "Licence": {link: "https://creativecommons.org/publicdomain/zero/1.0/", icon: "svg-icon cc-zero",},
+      "GitHub": {link: "https://github.com/doiotyourself/digital-garden/", icon: "svg-icon github",},
     },
   }),
 }
