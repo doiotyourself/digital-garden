@@ -6,15 +6,6 @@ import * as Plugin from "./quartz/plugins"
  *
  * See https://quartz.jzhao.xyz/configuration for more information.
  * 
- * darkMode
- * 
- * light: background
- * lightgray: searchbox
- * gray: date
- * darkgray: body of text
- * dark: heading
- * secondary: link
- * tertiary: mouse over link
  */
 const config: QuartzConfig = {
   configuration: {
@@ -31,7 +22,7 @@ const config: QuartzConfig = {
         dataCategoryId: "DIC_kwDOMPURSc4CgoCL",
       },
     },
-    locale: "en-US",
+    locale: "en-AU",
     baseUrl: "doiotyourself.com",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "created",
@@ -40,14 +31,14 @@ const config: QuartzConfig = {
       cdnCaching: true,
       typography: {
         header: "M PLUS Rounded 1c",
-        body: "M PLUS Rounded 1c",
+        body: "Inter Tight",
         code: "IBM Plex Mono",
       },
       colors: {
         lightMode: {
           light: "#f4f4f4",
           lightgray: "#ebebeb",
-          gray: "#bababa",
+          gray: "#806c44",
           darkgray: "#2d2d2d",
           dark: "#232323",
           secondary: "#44c608",
@@ -58,8 +49,8 @@ const config: QuartzConfig = {
           light: "#232323",
           lightgray: "#2d2d2d",
           gray: "#806c44",
-          darkgray: "#d6ccad",
-          dark: "#ffffff",
+          darkgray: "#bababa",
+          dark: "#f4f4f4",
           secondary: "#44c608",
           tertiary: "#44c608",
           highlight: "rgba(128, 108, 68, 0.15)",

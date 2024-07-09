@@ -18,7 +18,7 @@ export default ((opts?: Options) => {
         <ul>
           {Object.entries(links).map(([text, detail]) => (
             <li>
-              <a href={detail.link}><i class={detail.icon} alt={text}></i></a><br />{text}
+              <a id={text} href={detail.link}><i class={detail.icon} alt={text}></i></a><br /><label for={text}>{text}</label>
             </li>
           ))}
         </ul>
