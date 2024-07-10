@@ -37,7 +37,9 @@ export const defaultContentPageLayout: PageLayout = {
     Component.Backlinks(),
   ],
   //@ts-ignore
-  footer: Component.Discussion(),
+  afterBody: [
+    Component.Discussion(),
+  ],
 }
 
 // components for pages that display lists of pages  (e.g. tags or folders)
@@ -51,4 +53,5 @@ export const defaultListPageLayout: PageLayout = {
     Component.DesktopOnly(Component.Explorer()),
   ],
   right: [],
+  afterBody: [],
 }
