@@ -5,7 +5,17 @@ import * as Component from "./quartz/components"
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [],
-  afterBody: [],
+  afterBody: [
+    Component.Comments({
+      provider: 'giscus',
+      options: {
+        repo: "doiotyourself/digital-garden",
+        repoId: "R_kgDOMPURSQ",
+        category: "Announcements",
+        categoryId: "DIC_kwDOMPURSc4CgoCL",
+      }
+    }),
+  ],
   footer: Component.Footer({
     links: {
       "About": {link: "/about", icon: "svg-icon about",},
@@ -36,10 +46,6 @@ export const defaultContentPageLayout: PageLayout = {
     Component.Graph(),
     Component.DesktopOnly(Component.TableOfContents()),
     Component.Backlinks(),
-  ],
-  //@ts-ignore
-  afterBody: [
-    Component.Discussion(),
   ],
 }
 
