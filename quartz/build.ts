@@ -19,6 +19,7 @@ import { options } from "./util/sourcemap"
 import { Mutex } from "async-mutex"
 import DepGraph from "./depgraph"
 import { getStaticResourcesFromPlugins } from "./plugins"
+import { randomIdNonSecure } from "./util/random"
 
 type Dependencies = Record<string, DepGraph<FilePath> | null>
 
@@ -38,13 +39,9 @@ type BuildData = {
 
 type FileEvent = "add" | "change" | "delete"
 
-function newBuildId() {
-  return new Date().toISOString()
-}
-
 async function buildQuartz(argv: Argv, mut: Mutex, clientRefresh: () => void) {
   const ctx: BuildCtx = {
-    buildId: newBuildId(),
+    buildId: randomIdNonSecure(),
     argv,
     cfg,
     allSlugs: [],
@@ -139,9 +136,9 @@ async function startServing(
 
   const buildFromEntry = argv.fastRebuild ? partialRebuildFromEntrypoint : rebuildFromEntrypoint
   watcher
-    .on("add", (fp) => buildFromEntry(fp, "add", clientRefresh, buildData))
-    .on("change", (fp) => buildFromEntry(fp, "change", clientRefresh, buildData))
-    .on("unlink", (fp) => buildFromEntry(fp, "delete", clientRefresh, buildData))
+    .on("add", (fp) => buildFromEntry(fp as string, "add", clientRefresh, buildData))
+    .on("change", (fp) => buildFromEntry(fp as string, "change", clientRefresh, buildData))
+    .on("unlink", (fp) => buildFromEntry(fp as string, "delete", clientRefresh, buildData))
 
   return async () => {
     await watcher.close()
@@ -162,17 +159,19 @@ async function partialRebuildFromEntrypoint(
     return
   }
 
-  const buildStart = new Date().getTime()
-  buildData.lastBuildMs = buildStart
+  const buildId = randomIdNonSecure()
+  ctx.buildId = buildId
+  buildData.lastBuildMs = new Date().getTime()
   const release = await mut.acquire()
-  if (buildData.lastBuildMs > buildStart) {
+
+  // if there's another build after us, release and let them do it
+  if (ctx.buildId !== buildId) {
     release()
     return
   }
 
   const perf = new PerfTimer()
   console.log(chalk.yellow("Detected change, rebuilding..."))
-  ctx.buildId = newBuildId()
 
   // UPDATE DEP GRAPH
   const fp = joinSegments(argv.directory, toPosixPath(filepath)) as FilePath
@@ -357,19 +356,19 @@ async function rebuildFromEntrypoint(
     toRemove.add(filePath)
   }
 
-  const buildStart = new Date().getTime()
-  buildData.lastBuildMs = buildStart
+  const buildId = randomIdNonSecure()
+  ctx.buildId = buildId
+  buildData.lastBuildMs = new Date().getTime()
   const release = await mut.acquire()
 
   // there's another build after us, release and let them do it
-  if (buildData.lastBuildMs > buildStart) {
+  if (ctx.buildId !== buildId) {
     release()
     return
   }
 
   const perf = new PerfTimer()
   console.log(chalk.yellow("Detected change, rebuilding..."))
-  ctx.buildId = newBuildId()
 
   try {
     const filesToRebuild = [...toRebuild].filter((fp) => !toRemove.has(fp))
@@ -405,10 +404,10 @@ async function rebuildFromEntrypoint(
     }
   }
 
-  release()
   clientRefresh()
   toRebuild.clear()
   toRemove.clear()
+  release()
 }
 
 export default async (argv: Argv, mut: Mutex, clientRefresh: () => void) => {

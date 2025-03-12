@@ -1,9 +1,6 @@
 import { slug as slugAnchor } from "github-slugger"
 import type { Element as HastElement } from "hast"
-import rfdc from "rfdc"
-
-export const clone = rfdc()
-
+import { clone } from "./clone"
 // this file must be isomorphic so it can't use node libs (e.g. path)
 
 export const QUARTZ = "quartz"
@@ -108,10 +105,10 @@ const _rebaseHtmlElement = (el: Element, attr: string, newBase: string | URL) =>
   el.setAttribute(attr, rebased.pathname + rebased.hash)
 }
 export function normalizeRelativeURLs(el: Element | Document, destination: string | URL) {
-  el.querySelectorAll('[href^="./"], [href^="../"]').forEach((item) =>
+  el.querySelectorAll('[href=""], [href^="./"], [href^="../"]').forEach((item) =>
     _rebaseHtmlElement(item, "href", destination),
   )
-  el.querySelectorAll('[src^="./"], [src^="../"]').forEach((item) =>
+  el.querySelectorAll('[src=""], [src^="./"], [src^="../"]').forEach((item) =>
     _rebaseHtmlElement(item, "src", destination),
   )
 }
@@ -183,10 +180,26 @@ export function slugTag(tag: string) {
 }
 
 export function joinSegments(...args: string[]): string {
-  return args
-    .filter((segment) => segment !== "")
+  if (args.length === 0) {
+    return ""
+  }
+
+  let joined = args
+    .filter((segment) => segment !== "" && segment !== "/")
+    .map((segment) => stripSlashes(segment))
     .join("/")
-    .replace(/\/\/+/g, "/")
+
+  // if the first segment starts with a slash, add it back
+  if (args[0].startsWith("/")) {
+    joined = "/" + joined
+  }
+
+  // if the last segment is a folder, add a trailing slash
+  if (args[args.length - 1].endsWith("/")) {
+    joined = joined + "/"
+  }
+
+  return joined
 }
 
 export function getAllSegmentPrefixes(tags: string): string[] {
