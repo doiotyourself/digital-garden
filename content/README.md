@@ -2,6 +2,7 @@
 title: About
 alias:
   - "about"
+  - "README"
 ---
 
 Some information about you!

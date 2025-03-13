@@ -3,7 +3,8 @@ layout: post
 title: SSH and VSCodium
 date: 2023-05-08
 alias:
-  - "SSH-and-VSCodium"
+  - "../SSH-and-VSCodium"
+  - "../posts/2023-05-08-SSH-and-VSCodium"
 tags:
   - "VSCodium"
 ---

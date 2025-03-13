@@ -3,7 +3,8 @@ layout: post
 title: "Too Soon to Upgrade to ESXi 8.0"
 date: 2023-01-29
 alias:
-  - "Too-Soon-to-Upgrade-to-ESXi-8.0"
+  - "../Too-Soon-to-Upgrade-to-ESXi-8.0"
+  - "../posts/2023-01-29-Too-Soon-to-Upgrade-to-ESXi-8.0"
 tags:
   - ESXi
 ---

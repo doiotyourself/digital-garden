@@ -3,7 +3,8 @@ layout: post
 title: "VSCodium Extensions"
 date: 2023-01-26
 alias:
-  - "VSCodium-Extensions"
+  - "../VSCodium-Extensions"
+  - "../posts/2023-01-26-VSCodium-Extensions"
 tags:
   - VSCodium
   - markdown

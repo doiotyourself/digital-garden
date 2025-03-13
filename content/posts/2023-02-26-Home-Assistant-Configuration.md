@@ -3,7 +3,8 @@ layout: post
 title: Home Assistant Configuration
 date: 2023-02-26
 alias:
-  - "Home-Assistant-Configuration"
+  - "../Home-Assistant-Configuration"
+  - "../posts/2023-02-26-Home-Assistant-Configuration"
 tags:
   - "Home Assistant"
 ---

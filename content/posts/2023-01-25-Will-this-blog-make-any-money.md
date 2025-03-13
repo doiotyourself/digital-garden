@@ -3,8 +3,9 @@ layout: post
 title: "Will this blog make any money?"
 date: 2023-01-25
 draft: "true"
-alias:
-  - "Will-this-blog-make-any-money"
+# alias:
+#  - "../Will-this-blog-make-any-money"
+#  - "../posts/2023-01-25-Will-this-blog-make-any-money"
 ---
 
 Ok, so I ask myself why did I start this blog? And will this blog make any money?

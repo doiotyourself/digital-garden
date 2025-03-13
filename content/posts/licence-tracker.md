@@ -1,7 +1,11 @@
 ---
 layout: page
 title: My Software Licence Tracker
-permalink: /software-licence-tracker.html
+alias: 
+  - "../software-licence-tracker"
+  - "../licence-tracker"
+tags:
+  - "licence"
 ---
 
 | Item                                         | non-commercial use | Commercial use | Licence                       |

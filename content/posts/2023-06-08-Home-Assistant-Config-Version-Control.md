@@ -4,7 +4,8 @@ title: "Home Assistant Config Version Control with git"
 date: 2023-06-08
 draft: "false"
 alias:
-  - "Home-Assistant-Config-Version-Control"
+  - "../Home-Assistant-Config-Version-Control"
+  - "../posts/2023-06-08-Home-Assistant-Config-Version-Control"
 tags:
   - git
   - "Home Assistant"

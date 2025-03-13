@@ -1,7 +1,8 @@
 ---
 layout: page
 title: My IoT Expense Tracker
-permalink: /expense-tracker.html
+alias: 
+  - "../expense-tracker"
 ---
 
 # 2023-01-24

@@ -65,12 +65,12 @@ export default {
     error: {
       title: "Not Found",
       notFound: "Either this page is private or doesn't exist.",
-      home: "Return to Homepage",
+      home: "Return to Home page",
     },
     folderContent: {
       folder: "Folder",
       itemsUnderFolder: ({ count }) =>
-        count === 1 ? "1 item under this folder." : `${count} items under this folder.`,
+        count === 1 ? "1 item in this directory." : `${count} items in this directory.`,
     },
     tagContent: {
       tag: "Tag",

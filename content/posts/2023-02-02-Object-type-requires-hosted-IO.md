@@ -3,7 +3,8 @@ layout: post
 title: "Object type requires hosted I/O"
 date: 2023-02-02
 alias:
-  - "Object-type-requires-hosted-IO"
+  - "../Object-type-requires-hosted-IO"
+  - "../posts/2023-02-02-Object-type-requires-hosted-IO"
 tags:
   - ESXi
   - "Home Assistant"
