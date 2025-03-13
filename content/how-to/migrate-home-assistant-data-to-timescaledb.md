@@ -4,10 +4,16 @@ title: "How to recover and migrate data from Home Assistant to TimescaleDB"
 date: 2025-03-12
 draft: false
 tags:
-  - "Home-Assistant"
-  - "How-to"
+  - "Home Assistant"
+  - "TimescaleDB"
+  - "LTSS"
+  - "Podman"
+  - "Quadlet"
+  - "Postgres"
+  - "pgloader"
+  - "Stow"
 alias:
-  - "posts/home-assistant-migrate-data-to-timescaledb"
+  - "../posts/home-assistant-migrate-data-to-timescaledb"
 ---
 
 > [!tldr] TL;DR
@@ -30,36 +36,36 @@ I'll also relinquish state data from the Home Assistant container by changing th
 
 The key components of my approach are:
 
-- [[#Part 1: Build a new TimescaleDB database server]]
+- [[#Part 1: How to build a new TimescaleDB database server]]
     - Use Podman [Quadlet] to run a TimescaleDB container under systemd in a declarative way.
     - Use GNU [Stow] to place the Quadlet files in the correct directories using symlinks.
     - Connect Home Assistant core container to TimescaleDB via Postgres' standard Unix domain socket.
 
-- [[#Part 2: Recover data from the crashed database server to a working database server]]
+- [[#Part 2: How to recover data from the crashed database server to a working database server]]
     - Build a new timescaledb:pg15 database server, the same version as the database server that crashed, but with more disk space.
     - Copy the physical database - i.e. the data files - from the crashed server to the newly built database server.
     - Start the new database server and let it identify and repair inconsistencies in the database using its built in tools.
 
-- [[#Part 3: Migrate data from timescaledb:pg15 to timescaledb:pg17]]
+- [[#Part 3: How to upgrade postgres major version]]
     - Use LTSS to create the database schema in timescaledb:pg17.
     - Dump the data from the timescaledb:pg15 table into a `.csv` file.
     - Restore the data from the `.csv` to the timescaledb:pg17 database.
 
-- [[#Part 4: Changing the database used by the recorder integration to the new database server]]
+- [[#Part 4: How to change the database used by the recorder integration to postgres]]
     - Use Home Assistant to create the database schema in timescaledb:pg17.
     - Connect a container running [pgloader] to timescaledb:pg17.
     - Take a copy of the physical database - i.e. SQLite file`/config/home-assistant_v2.db`- from Home Assistant.
     - Instruct pgloader to load data from the SQLite file to timescaledb:pg17.
 
-## How to
-
 In the following guide, all containers are run in rootless Podman on OpenSUSE MicroOS (February 2025) operating system and x86-64 architecture.
 
-### Part 1: Build a new TimescaleDB database server
+## Part 1: How to build a new TimescaleDB database server
 
 Home Assistant sensor states are stored as time series database via the custom integration LTSS. We'll create postgres user 'ltss' and database 'ltss' in TimescaleDB.
 
-#### 1.1 Use Podman [Quadlet] to run a TimescaleDB container under systemd in a declarative way
+### 1.1 TimescaleDB quadlet
+
+Use Podman [Quadlet] to run a TimescaleDB container under systemd in a declarative way
 
 We create three quadlet files:
 
@@ -69,17 +75,17 @@ We create three quadlet files:
 
 Later we'll use Stow to placed them in `$HOME/.config/containers/systemd/`.
 
-##### `timescaledb-pg17.container` \[Unit\] section
+#### `timescaledb-pg17.container` \[Unit\] section
 
 Should be self-explanatory.
 
-##### `timescaledb-pg17.container` \[Container\] section
+#### `timescaledb-pg17.container` \[Container\] section
 
-###### TimescaleDB image
+##### TimescaleDB image
 
 I will use the official `timescale/timescaledb-ha:pg17` container image as it comes with PostGIS and is the latest PostgreSQL version. This is great for x86-64 architecture, if you are on another architecture take a look at `expaso/timescaledb` images.
 
-###### TimescaleDB volumes
+##### TimescaleDB volumes
 
 ``` dotenv
 Volume=timescaledb-ha-pg17-data.volume:/home/postgres/pgdata/data:Z
@@ -95,7 +101,7 @@ Volume=%h/pg-share:/mnt/pg-share:z
 - `conf.d` provides us with a directory where we can add `.conf` files to configure the postgres database.
 - The final volume mounts a shared directory for importing/exporting `.csv`s and `pg_dump`s. I use Stow with `--no-folding` to create the `$HOME/pg-share` directory.
 
-###### TimescaleDB Environment variables
+##### TimescaleDB Environment variables
 
 ``` dotenv
 Environment=LOCALE=en
@@ -114,7 +120,7 @@ I'll cover some of them, the others should be self-explanatory.
 - POSTGRES_DB is not set because `/docker-entrypoint-initdb.d/init.sql` is used to create the databases
 - TS_TUNE_MEMORY is set to 2GB (the host has 4GB memory) to keep TimescaleDB happy if the cgroup memory resource controller is not delegated to the user runing the container, which is the default for OpenSUSE MicroOS.
 
-###### TimescaleDB network
+##### TimescaleDB network
 
 ``` dotenv
 #PublishPort=5432:5432/tcp
@@ -122,7 +128,7 @@ I'll cover some of them, the others should be self-explanatory.
 
 Port 5432 is not published as all database connections are via unix domain sockets.
 
-###### TimescaleDB health check
+##### TimescaleDB health check
 
 ``` dotenv
 HealthCmd=pg_isready -d recorder -U recorder
@@ -137,21 +143,21 @@ Notify=healthy
 Systemd will consider the container healthy when postgres user 'recorder' can connect to database 'recorder'.
 Comment out `HealthOnFailure=kill` until after the data migration is complete, as we are manually monitoring the container's health for the migration.
 
-###### TimescaleDB AutoUpdate
+##### TimescaleDB AutoUpdate
 
 `AutoUpdate` is explained in [podman-auto-update(1)](https://docs.podman.io/en/latest/markdown/podman-auto-update.1.html).
 
-##### `timescaledb-pg17.container` \[Install\] section
+#### `timescaledb-pg17.container` \[Install\] section
 
 The container will start when the user logs in.
 
 Set `loginctl enable-linger 1000` to start the container when the host boots and prevent user processes to be killed once the user session completed.
 
-##### `timescaledb-pg17.container` \[Service\] section
+#### `timescaledb-pg17.container` \[Service\] section
 
 Should also be self-explanatory.
 
-#### 1.2 Pre-seed the database
+### 1.2 Pre-seed the database
 
 Firstly we'll prepare a sql script that will create the postgres users and databases. In a later step, it will be bind-mounted into the container at `/docker-entrypoint-initdb.d/init.sql`.
 
@@ -167,7 +173,9 @@ The first SQL statement tells the postgres server to include the configuration f
 
 For a detailed explanation of how this works see [Dockerdocs guide: Pre-seed the database by bind-mounting a SQL script](https://docs.docker.com/guides/pre-seeding/#pre-seed-the-database-by-bind-mounting-a-sql-script).
 
-#### 1.3 Use GNU [Stow] to place the Quadlet files in the correct directories using symlinks
+### 1.3 Stow the quadlet files
+
+Use GNU [Stow] to place the quadlet files in the correct directories using symlinks
 
 We'll create a new package with a specific directory structure that suits the default Stow settings.
 
@@ -201,7 +209,7 @@ The following happens (try it yourself with `--simulate --verbose`):
 - the directories `$HOME/.config/containers/systemd` are created (if not already) and symlinks to the quadlet files in `dot-config/containers/systemd` are placed inside.
 - the directory `$HOME/pg-share` is created but it's empty because `gitignore` is also listed in `.stow-local-ignore`
 
-#### 1.4 The timescaledb-pg17 container is ready to start
+### 1.4 TimescaleDB is ready to start
 
 The TimescaleDB container image is >1GB so you may wish to `podman pull` in advance of starting the systemd service.
 
@@ -226,13 +234,15 @@ CREATE DATABASE
 ...
 ```
 
-#### 1.5 Connect Home Assistant core container to TimescaleDB via Postgres' standard Unix domain socket
+### 1.5 Connect Home Assistant to TimescaleDB
+
+Connect Home Assistant core container to TimescaleDB via Postgres' standard Unix domain socket
 
 Now that the TimescaleDB container is running, we'll connect Home Assistant to the databases via unix socket.
 
 LTSS will generate its hypertable when it first connects to the database (as a superuser).
 
-##### Amend the Home Assistant core quadlet
+#### Amend the Home Assistant core quadlet
 
 Add the unix socket to the \[Container\] section.
 
@@ -247,7 +257,9 @@ Requires=timescaledb-ha-pg17.service
 After=timescaledb-ha-pg17.service
 ```
 
-##### Add the LTSS integration via Home Assistant's `configuration.yaml`
+#### Add the LTSS integration
+
+Modify Home Assistant's `configuration.yaml`:
 
 ``` yaml title="configuration.yaml"
 ltss:
@@ -269,7 +281,7 @@ logger:
     custom_components.ltss: debug
 ```
 
-##### Creating the database tables
+#### Create the ltss database table
 
 Restart Home Assistant.
 
@@ -302,11 +314,11 @@ psql -U postgres -d ltss
 ALTER TABLE public.ltss OWNER TO ltss;
 ```
 
-### Part 2: Recover data from the crashed database server to a working database server
+## Part 2: How to recover data from the crashed database server to a working database server
 
-#### 2.1 Build a new timescaledb:pg15 database server
+### 2.1 Create a new database server
 
-For the best chance of successful recovery I'll build a new TimescaleDB database server that is the same version as the database server that crashed (i.e Postgres version 15). In [[#Part 1: Build a new TimescaleDB database server|Part 1]] I created the production TImescaleDB container this container will be thrown away after the migration is complete.
+For the best chance of successful recovery I'll build a new TimescaleDB database server that is the same version as the database server that crashed (i.e Postgres version 15). In [[#1.1 TimescaleDB quadlet|Part 1]] I created the production TImescaleDB container this container will be thrown away after the migration is complete.
 I wasn't previously using PostGIS so I can use the light weight TimescaleDB image:
 
 ``` dotenv
@@ -322,7 +334,7 @@ Volume=%h/pg-share:/mnt/pg-share:z
 
 Now start the container and let TimescaleDB instantiate the data directory. Knowing that the container runs successfully at this step may also help with troubleshooting should it be necessary later. The container should be stopped after the disk activity finishes.
 
-#### 2.2 Copy the database
+### 2.2 Copy the database
 
 Copy the physical database from the crashed server to the newly built database server
 
@@ -337,7 +349,7 @@ josh@hppp:~> ssh root@192.168.107.174
 josh@hppp:~> scp -r root@192.168.107.174:/var/lib/postgresql/15/main ha1.localdomain:/home/josh/pg15-main
 ```
 
-#### 2.3 Repair the database
+### 2.3 Repair the database
 
 Start the new database server with the physical database from the crashed server and let it identify and repair inconsistencies in the database using its built in tools
 
@@ -354,11 +366,13 @@ That's it. I assume LTSS could now connect to my new database server, with the a
 josh@ha1:~> rm -r pg15-main
 ```
 
-### Part 3: Migrate data from timescaledb:pg15 to timescaledb:pg17
+## Part 3: How to upgrade postgres major version
+
+We need to migrate from timescaledb:pg15 to timescaledb-ha:pg17.
 
 This part cherry picks the single-threaded method in the detailed Timescale Docs article [Migrate schema and data separately](https://docs.timescale.com/self-hosted/latest/migration/schema-then-data/).
 
-#### 3.1 Dump the data
+### 3.1 Dump the LTSS table
 
 Export the data from the timescaledb:pg15 table into a `.csv` file.
 
@@ -376,13 +390,17 @@ LTSS only creates one table by default and its called 'ltss'.
 
 Once the dump is complete we can shutdown this container. I hope you remember how to detach :) ctrl+p ctrl+q
 
-#### 3.2 Use LTSS to create the database schema in timescaledb:pg17 database
+### 3.2 Create the LTSS database schema
 
-In [[#Part 1: Build a new TimescaleDB database server|Part 1]] we used LTSS to create the database schema in timescaledb:pg17. There is no need to migrate any other schema, only data is being migrated. I recommend disconnecting Home Assistant from the ltss database before proceeding.
+Use LTSS to create the database schema in timescaledb:pg17 database
 
-#### 3.3 Restore the data from the `.csv` to the timescaledb:pg17 database
+In [[#1.5 Connect Home Assistant to TimescaleDB|Part 1]] we used LTSS to create the database schema in timescaledb:pg17. There is no need to migrate any other schema, only data is being migrated. I recommend disconnecting Home Assistant from the ltss database before proceeding.
 
-Because I mounted the timescaledb-pg15 volume as described in [[#Part 2: Recover data from the crashed database server to a working database server|Part 2]] and I mounted the timescaledb-pg17 volume as described in [[#Part 1: Build a new TimescaleDB database server|Part 1]] the data from the ltss table was dumped into `$HOME/pg-share/ltss.csv` on the container host and now I can do this:
+### 3.3 Import the data to LTSS
+
+Restore the data from the `.csv` to the timescaledb:pg17 database
+
+Because I mounted the timescaledb-pg15 volume as described in [[#2.1 Build a new database server|Part 2]] and I mounted the timescaledb-pg17 volume as described in [[#TimescaleDB volumes|Part 1]] the data from the ltss table was dumped into `$HOME/pg-share/ltss.csv` on the container host and now I can do this:
 
 Connect to the timescaledb-pg17 database - see step 1.
 
@@ -396,22 +414,24 @@ My new ltss table supports PostGIS but my old ltss table did not, so I have to s
 >
 > [Do not confuse COPY with the psql instruction \copy.](https://www.postgresql.org/docs/current/sql-copy.html)
 
-#### 3.4 Finish up
+### 3.4 Verify and finish up
 
 - Verify the data is present in the timescaledb-pg17 database.
 - Reconnect Home Assistant LTSS integration to TimescaleDB.
 - Clean up unneeded files. e.g. the contents of `$HOME/pg-share/`.
 
-### Part 4: Changing the database used by the recorder integration to the new database server
+## Part 4: How to change the database used by the recorder integration to postgres
 
 This part is very similar to the excellent blog posts listed below. I'd like to thank these authors as it saved me a bunch of time. I'm keeping this brief.
 
 - Migrate Home Assistant from SQLite to PostgreSQL [sigfried.be](https://sigfried.be/blog/migrating-home-assistant-sqlite-to-postgresql/)
 - Migrating HomeAssistant from SQLite to PostgreSQL [www.redpill-linpro.com](https://www.redpill-linpro.com/techblog/2023/03/21/migrating-home-assistnt-to-postgresql.html)
 
-#### 4.1 Use Home Assistant to create the recorder database schema in timescaledb:pg17
+### 4.1 Create the recorder database schema
 
-In [[#Part 1: Build a new TimescaleDB database server|Part 1]] we created a database named 'recorder' and a role named 'recorder'. We use the same unix domain socket from Part 1 to connect Home Assistant to timescaledb:pg17. Add the following to `configuration.yaml`:
+Use Home Assistant to create the recorder database schema in timescaledb:pg17
+
+In [[#1.2 Pre-seed the database|Part 1]] we created a database named 'recorder' and a role named 'recorder'. We use the same unix domain socket from Part 1 to connect Home Assistant to timescaledb:pg17. Add the following to `configuration.yaml`:
 
 ``` yaml title="configuration.yaml"
 recorder:
@@ -435,13 +455,17 @@ If you increased the logging level you should see something like the following o
 DEBUG (Recorder) [homeassistant.components.recorder.core] Connected to recorder database
 ```
 
-#### 4.2 Take a copy of the physical database - i.e. SQLite file`/config/home-assistant_v2.db` - from Home Assistant
+### 4.2 Copy the physical database
+
+Take a copy of the physical database - i.e. SQLite file`/config/home-assistant_v2.db` - from Home Assistant
 
 There should be no issues copying the database because, in the previous step, when Home Assistant was restarted with the new recorder configuration the recorder integration stopped writing to the SQLite file.
 
 Copy the SQLite file `/config/home-assistant_v2.db` from Home Assistant to the container host `$HOME/pgloader/` directory. `rsync` works well as does `scp`.
 
-#### 4.3 Connect a container running [pgloader] to timescaledb:pg17
+### 4.3 Connect pgloader to postgres
+
+Connect a container running [pgloader] to timescaledb:pg17
 
 Some items to note from the quadlet file:
 
@@ -452,7 +476,7 @@ Some items to note from the quadlet file:
 - `Exec=/bin/sh -c "pgloader --verbose /recorder.load;"` starts pgloader when the container is run.
 - `#PodmanArgs=-it` will keep the container running when it's started with systemd. This may be useful for troubleshooting. Use with `podman attach`.
 
-##### `recorder.load`
+#### `recorder.load`
 
 The command file `recorder.load` is very similar to the example in the [pgloader docs](https://pgloader.readthedocs.io/en/latest/ref/sqlite.html#using-advanced-options-and-a-load-command-file). It is also easier to read than write:
 
@@ -505,7 +529,9 @@ It has a couple of differences to the afore mentioned blog posts.
 
 **After load** all the Home Assistant database sequences are reset. This seemed to be more successful than using pgloader WITH reset sequences.
 
-#### 4.4 Instruct pgloader to load data from the SQLite file to timescaledb:pg17
+### 4.4 Load the data
+
+Instruct pgloader to load data from the SQLite file to timescaledb:pg17.
 
 If the Home Assistant recorder integration is connected to timescaledb:pg17 we should stop the container. This seemed more robust than disabling it via the service call `recorder.disable`.
 
@@ -548,17 +574,23 @@ COPY Threads Completion          0          4          4                 11m42.8
       Total import time          ✓    7732285    7732285     1.1 GB       12m5.033s    
 ```
 
-#### 4.5 Verify that the data migration was successful
+### 4.5 Verification
+
+Verify that the data migration was successful
 
 Reboot Home Assistant and check that entity state history and statistics are available from the Home Assistant History panel.
 
-#### 4.6 Purge the recorder
+### 4.6 Purge the recorder
 
 You may get an error in the log similar to `Duplicate key value violates unique constraint "state_attributes_pkey"`. Purging the recorder and restarting Home Assistant will fix any remanant issues from the migration.
 
 ![Recorder purge](doiotyourself.com_home-assistant-migrate-data-to-timescaledb.png)
 
-#### 4.7 Reclaim some disk space
+### 4.7 Tidy up
+
+- Return the Home Assistant logger to default settings.
+
+#### Reclaim some disk space
 
 Assuming that the data in timescaledb:pg17 is adequately backed up - (not covered in this guide, see [Future Work](#future-work)) - then we can remove `home-assistant_v2.db` from both the container host `$HOME/pg_share/` and Home Assistant `/config/` directories.
 
@@ -567,10 +599,6 @@ We can also remove the pgloader image:
 ```console
 podman image rm ghcr.io/dimitri/pgloader:latest
 ```
-
-#### 4.8 Tidy up
-
-- Return the Home Assistant logger to default settings.
 
 ## Conclusion
 

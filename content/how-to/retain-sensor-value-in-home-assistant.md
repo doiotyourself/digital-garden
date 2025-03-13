@@ -1,24 +1,24 @@
 ---
 layout: post
-title: "How to retain the last value of a sensor that has become unavailable in Home Assistant."
+title: "How to retain the last value of a sensor that has become unavailable in Home Assistant"
 date: 2024-08-15
 draft: false
 tags:
-  - "Home-Assistant"
-  - "How-to"
+  - "Home Assistant"
 alias:
-  - "retain-sensor-value"
+  - "../retain-sensor-value"
+  - "../posts/home-assistant-retain-sensor-value"
 ---
 
 Do you have a sensor that is regularly `unavailable` on your Home Assistant Dashboard, but you'd like to see what the last measured value was?
 
-Here is how to retain the value.
-
-## TL;DR
-
-1. Create a [template sensor](https://www.home-assistant.io/integrations/template/).
-2. Update the template sensor's value with a [trigger](https://www.home-assistant.io/docs/automation/trigger/).
-3. Add an [entities card](https://www.home-assistant.io/dashboards/entities/) to your dashboard for the new template sensor.
+> [!tldr] TL;DR
+>
+> Here is how to retain the value in Home Assistant:
+>
+> 1. Create a [template sensor](https://www.home-assistant.io/integrations/template/).
+> 2. Update the template sensor's value with a [trigger](https://www.home-assistant.io/docs/automation/trigger/).
+> 3. Add an [entities card](https://www.home-assistant.io/dashboards/entities/) to your dashboard for the new template sensor.
 
 ## Worked example
 
