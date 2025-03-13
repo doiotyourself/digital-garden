@@ -5,23 +5,13 @@ import * as Component from "./quartz/components"
 export const sharedPageComponents: SharedLayout = {
   head: Component.Head(),
   header: [],
-  afterBody: [
-    Component.Comments({
-      provider: 'giscus',
-      options: {
-        repo: "doiotyourself/digital-garden",
-        repoId: "R_kgDOMPURSQ",
-        category: "Announcements",
-        categoryId: "DIC_kwDOMPURSc4CgoCL",
-      }
-    }),
-  ],
+
   footer: Component.Footer({
     links: {
       "About": {link: "/about", icon: "svg-icon about",},
       "Contact": {link: "/contact", icon: "svg-icon contact",},
       "RSS Feed": {link: "/index.xml", icon: "svg-icon rss",},
-      "Licence": {link: "https://creativecommons.org/publicdomain/zero/1.0/", icon: "svg-icon cc-zero",},
+      "Licence": {link: "/licence", icon: "svg-icon cc-zero",},
       "GitHub": {link: "https://github.com/doiotyourself/digital-garden/", icon: "svg-icon github",},
     },
   }),
@@ -30,9 +20,17 @@ export const sharedPageComponents: SharedLayout = {
 // components for pages that display a single page (e.g. a single note)
 export const defaultContentPageLayout: PageLayout = {
   beforeBody: [
-    Component.Breadcrumbs(),
+    Component.Breadcrumbs({
+      spacerSymbol: "❯", // symbol between crumbs
+      rootName: "Home", // name of first/root element
+      resolveFrontmatterTitle: true, // whether to resolve folder names through frontmatter titles
+      hideOnRoot: true, // whether to hide breadcrumbs on root `index.md` page
+      showCurrentPage: false, // whether to display the current page in the breadcrumbs
+    }),
     Component.ArticleTitle(),
-    Component.ContentMeta(),
+    Component.ContentMeta({
+      hideOnRoot: true,
+    }),
     Component.TagList(),
   ],
   left: [
@@ -47,25 +45,70 @@ export const defaultContentPageLayout: PageLayout = {
         { Component: Component.Darkmode() },
       ],
     }),
-    Component.Explorer(),
+    Component.DesktopOnly(Component.TableOfContents()),
   ],
   right: [
     Component.Graph(),
-    Component.DesktopOnly(Component.TableOfContents()),
-    Component.Backlinks(),
+  ],
+  afterBody: [
+    Component.Backlinks({
+      hideOnRoot: true,
+    }),
+    Component.Comments({
+      provider: 'giscus',
+      options: {
+        repo: "doiotyourself/digital-garden",
+        repoId: "R_kgDOMPURSQ",
+        category: "Announcements",
+        categoryId: "DIC_kwDOMPURSc4CgoCL",
+      }
+    }),
+    Component.Explorer({
+      filterFn: (node) => {
+        // set containing names of everything you want to filter out
+        const omit = new Set([
+          "about", 
+          "contact", 
+          "licence", 
+          "privacy", 
+          "gone"
+        ])
+        return !omit.has(node.data?.title.toLowerCase())
+      },
+      hideOnRoot: true,
+    }),
   ],
 }
 
 // components for pages that display lists of pages  (e.g. tags or folders)
 export const defaultListPageLayout: PageLayout = {
-  beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle(), Component.ContentMeta()],
+  beforeBody: [
+    Component.Breadcrumbs({
+      spacerSymbol: "❯", // symbol between crumbs
+      rootName: "Home", // name of first/root element
+      resolveFrontmatterTitle: true, // whether to resolve folder names through frontmatter titles
+      hideOnRoot: true, // whether to hide breadcrumbs on root `index.md` page
+      showCurrentPage: false, // whether to display the current page in the breadcrumbs
+    }), 
+    Component.ArticleTitle(), 
+    Component.ContentMeta()
+  ],
   left: [
     Component.PageTitle(),
     Component.MobileOnly(Component.Spacer()),
-    Component.Search(),
-    Component.Darkmode(),
-    Component.Explorer(),
+    Component.Flex({
+      components: [
+        {
+          Component: Component.Search(),
+          grow: true,
+        },
+        { Component: Component.Darkmode() },
+      ],
+    }),
+    Component.DesktopOnly(Component.TableOfContents()),
   ],
-  right: [],
+  right: [
+    Component.Graph(),
+  ],
   afterBody: [],
 }
