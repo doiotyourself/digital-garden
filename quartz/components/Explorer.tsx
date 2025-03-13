@@ -20,6 +20,7 @@ export interface Options {
   filterFn: (node: FileTrieNode) => boolean
   mapFn: (node: FileTrieNode) => void
   order: OrderEntries[]
+  hideOnRoot: boolean
 }
 
 const defaultOptions: Options = {
@@ -48,6 +49,10 @@ const defaultOptions: Options = {
   },
   filterFn: (node) => node.slugSegment !== "tags",
   order: ["filter", "map", "sort"],
+  /**
+   * Whether to display metadata on root `index.md`
+   */
+  hideOnRoot: false
 }
 
 export type FolderState = {
@@ -56,21 +61,26 @@ export type FolderState = {
 }
 
 export default ((userOpts?: Partial<Options>) => {
-  const opts: Options = { ...defaultOptions, ...userOpts }
+  const options: Options = { ...defaultOptions, ...userOpts }
   const { OverflowList, overflowListAfterDOMLoaded } = OverflowListFactory()
 
-  const Explorer: QuartzComponent = ({ cfg, displayClass }: QuartzComponentProps) => {
+  const Explorer: QuartzComponent = ({ cfg, fileData, displayClass }: QuartzComponentProps) => {
+    // Hide explorer on root if enabled
+    if (options.hideOnRoot && fileData.slug === "index") {
+      return <></>
+    }
+    
     return (
       <div
         class={classNames(displayClass, "explorer")}
-        data-behavior={opts.folderClickBehavior}
-        data-collapsed={opts.folderDefaultState}
-        data-savestate={opts.useSavedState}
+        data-behavior={options.folderClickBehavior}
+        data-collapsed={options.folderDefaultState}
+        data-savestate={options.useSavedState}
         data-data-fns={JSON.stringify({
-          order: opts.order,
-          sortFn: opts.sortFn.toString(),
-          filterFn: opts.filterFn.toString(),
-          mapFn: opts.mapFn.toString(),
+          order: options.order,
+          sortFn: options.sortFn.toString(),
+          filterFn: options.filterFn.toString(),
+          mapFn: options.mapFn.toString(),
         })}
       >
         <button
@@ -100,7 +110,7 @@ export default ((userOpts?: Partial<Options>) => {
           data-mobile={false}
           aria-expanded={true}
         >
-          <h2>{opts.title ?? i18n(cfg.locale).components.explorer.title}</h2>
+          <h2>{options.title ?? i18n(cfg.locale).components.explorer.title}</h2>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="14"

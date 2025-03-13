@@ -7,10 +7,12 @@ import OverflowListFactory from "./OverflowList"
 
 interface BacklinksOptions {
   hideWhenEmpty: boolean
+  hideOnRoot: boolean
 }
 
 const defaultOptions: BacklinksOptions = {
   hideWhenEmpty: true,
+  hideOnRoot: false
 }
 
 export default ((opts?: Partial<BacklinksOptions>) => {
@@ -23,6 +25,11 @@ export default ((opts?: Partial<BacklinksOptions>) => {
     displayClass,
     cfg,
   }: QuartzComponentProps) => {
+    // Hide backlinks on root if enabled
+    if (options.hideOnRoot && fileData.slug === "index") {
+      return <></>
+    }
+
     const slug = simplifySlug(fileData.slug!)
     const backlinkFiles = allFiles.filter((file) => file.links?.includes(slug))
     if (options.hideWhenEmpty && backlinkFiles.length == 0) {
