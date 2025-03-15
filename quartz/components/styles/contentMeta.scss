@@ -7,7 +7,8 @@
       margin-right: 8px;
 
       &::after {
-        content: ",";
+        padding-left: 8px;
+        content: "•";
       }
     }
   }

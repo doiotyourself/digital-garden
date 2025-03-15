@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg version="1.1" width="96" height="96" viewbox="0 0 96 96" xmlns="http://www.w3.org/2000/svg">
+   <style id="style1">
+
+      #stop1,
+      #stop2 {
+         stop-color: #806c44;
+      }
+
+      #oooo {
+         fill: #806c44;
+         stroke: #806c44;
+         opacity: 0.6;
+      }
+
+      #cap1,
+      #do,
+      #iot,
+      #yourself,
+      #dotcom {
+         fill: #44c608;
+         stroke: #44c608;
+      }
+
+      .diy {
+         opacity: 0;
+      }
+   </style>
+   <mask id="hole1" maskContentUnits="objectBoundingBox">
+      <rect width="1" height="1" fill="#ffffff" />
+      <circle cx="0.5" cy="0.5" r="0.3333333" fill="#000000" />
+   </mask>
+   <defs id="defs1">
+      <path id="def-o" d=" M 0 -4 h 1 q 3 0 3 3 v 2 q 0 3 -3 3 h -2 q -3 0 -3 -3 v -2 q  0 -3 3 -3 z" />
+      <path id="def-u" d="M 4.3 1.4  c -5 3.8 -8.3 3.1 -8.3 -0.4 " />
+      <g id="char-d" fill="none" stroke-width="2" stroke-linejoin="bevel" marker-start="url(#cap1)"
+         marker-end="url(#cap1)">
+         <use href="#def-o" />
+         <path d=" M 4 -8 v 12 h -5 q -3 0 -3 -3 v -2 q 0 -3 3 -3 h 5 v 8" />
+      </g>
+      <g id="char-o" mask="url(#hole1)">
+         <use href="#def-o" stroke-width="2" />
+         <rect width="10" height="10" x="-5" y="-5" stroke="none" fill="none" />
+      </g>
+      <g id="char-i">
+         <path fill="none" stroke-width="2" stroke-linejoin="bevel" marker-start="url(#cap1)" marker-mid="url(#cap1)"
+            marker-end="url(#cap1)" d="M -3 -4 h 3 v 8 h -3 6 M -3 -4 q 3 0 3 3" />
+         <use href="#def-o" transform="translate(-0.3333333 -8) scale(0.3333333 0.3333333)" stroke="none" />
+      </g>
+      <g id="char-t" stroke-width="2" fill="none" marker-start="url(#cap1)" marker-end="url(#cap1)">
+         <path d="M -1 -8 v 9 q 0 3 3 3 h 2" />
+         <path d="M -4 -4 h 6" />
+      </g>
+      <g id="char-y" stroke-width="2" fill="none" marker-start="url(#cap1)" marker-end="url(#cap1)">
+         <path d="M -4 -4 v 5 q 0 3 3 3 h 5 " />
+         <path d=" M 4 -4 v 5 q 0 3 -3 3 M 4 -4 v 9 q 0 3 -3 3 h -3 " />
+      </g>
+      <g id="char-u" stroke-width="2" fill="none">
+         <path marker-start="url(#cap1)" marker-mid="url(#cap1)" marker-end="url(#cap1)" d="M -4 -4 v 5.4 M 4 -4 v 8" />
+         <use href="#def-u" />
+      </g>
+      <g id="char-r" stroke-width="2" fill="none" marker-end="url(#cap1)">
+         <path marker-start="url(#cap1)" d="M -4 -4 v 8 " />
+         <use href="#def-u" transform="scale(-1 -1)" />
+      </g>
+      <g id="char-s" stroke-width="2" fill="none" marker-start="url(#cap1)" marker-end="url(#cap1)">
+         <path d="M 4 -4 h -5 q -3 0 -3 3 q 0 1 1 1 v 0 h 6 v 0 q 1 0 1 1 q 0 3 -3 3 h -5" />
+      </g>
+      <g id="char-e" stroke-width="2" fill="none" marker-start="url(#cap1)">
+         <path d="M 4 4 h -5 q -3 0 -3 -3 v -2 q 0 -3 3 -3 h 2 q 3 0 3 3 v 0 q 0 1 -1 1 h -7" />
+      </g>
+      <g id="char-l" stroke-width="2" fill="none" stroke-linejoin="bevel" marker-start="url(#cap1)"
+         marker-mid="url(#cap1)" marker-end="url(#cap1)">
+         <path d="M -3 -8 h 3 v 12 h -3 6 M -3 -8 q 3 0 3 3" />
+      </g>
+      <g id="char-f" stroke-width="2" fill="none" marker-start="url(#cap1)" marker-end="url(#cap1)">
+         <path d="M -1 4 v -9 q 0 -3 3 -3 h 2" />
+         <path d="M -4 -4 h 6" />
+      </g>
+      <g id="char-dot" stroke="none">
+         <use href="#def-o" transform="translate(3 3) scale(0.4 0.4)" />
+      </g>
+      <g id="char-c" stroke-width="2" fill="none" marker-start="url(#cap1)" marker-end="url(#cap1)">
+         <path d="M 4 4 h -5 q -3 0 -3 -3 v -2 q  0 -3 3 -3 h 2 q 3 0 3 3 v 0" />
+      </g>
+      <g id="char-sq" mask="url(#hole1)">
+         <path stroke-width="2" stroke-linejoin="bevel" marker-start="url(#cap1)" marker-mid="url(#cap1)"
+            marker-end="url(#cap1)" d=" M 4 -4 v 8 h -8 v -8 z" />
+         <rect width="10" height="10" x="-5" y="-5" stroke="none" fill="none" />
+      </g>
+      <g id="char-m" stroke-width="2" fill="none" stroke-linejoin="bevel" marker-start="url(#cap1)"
+         marker-end="url(#cap1)">
+         <path d="M -4 4 v -8 h 3.5 q 3 0 3 3 v 5 " />
+         <path d="M -4 -4 h 10 q 3 0 3 3 v 5" />
+      </g>
+      <linearGradient id="lg1" x1="86" y1="0" x2="166" y2="0" gradientUnits="userSpaceOnUse">
+         <stop id="stop1" offset="0" style="stop-opacity:0.5;" />
+         <stop id="stop2" offset="1" style="stop-opacity:0;" />
+      </linearGradient>
+      <marker id="cap1" viewBox="0 0 10 10" refX="5" refY="5" markerUnits="userSpaceOnUse" markerWidth="2"
+         markerHeight="2" orient="0">
+         <use href="#def-o" transform="translate(5 5)" stroke-width="2" />
+      </marker>
+   </defs>
+   <g id="layer1" transform="translate(-29,3)">
+      <path id="dip8" transform="scale(0.5)" fill="url(#lg1)" fill-opacity="0.1" stroke="url(#lg1)" stroke-width="2"
+         stroke-linejoin="round"
+         d="M 90 17 h 72 q 3 0 3 3 v 140 q 0 3 -3 3 h -25 a 11 11 0 0 0 -22 0 h -25 q -3 0 -3 -3 v -140 q  0 -3 3 -3 z" />
+      <g id="oooo">
+         <use id="echo-8" x="36" y="72" href="#char-o" />
+         <use id="echo-7" x="36" y="54" href="#char-o" />
+         <use id="echo-6" x="36" y="36" href="#char-o" />
+         <use id="echo-5" x="36" y="18" href="#char-o" />
+      </g>
+   </g>
+   <g id="layer2" transform="translate(-29,3)">
+      <g id="do">
+         <use id="echo-d" x="77" y="18" href="#char-d" />
+         <use id="echo-4" x="90" y="18" href="#char-o" class="diy"/>
+      </g>
+      <g id="iot">
+         <use id="echo-i" x="77" y="36" href="#char-i" transform="translate(1,0)" />
+         <use id="echo-3" x="90" y="36" href="#char-o" />
+         <use id="echo-t" x="103" y="36" href="#char-t" />
+      </g>
+      <g id="yourself">
+         <use id="echo-y" x="77" y="54" href="#char-y" />
+         <use id="echo-2" x="90" y="54" href="#char-o" class="diy"/>
+         <use id="echo-u" x="103" y="54" href="#char-u" class="diy"/>
+         <use id="echo-r" x="116" y="54" href="#char-r" class="diy"/>
+         <use id="echo-s" x="129" y="54" href="#char-s" class="diy"/>
+         <use id="echo-e" x="142" y="54" href="#char-e" class="diy"/>
+         <use id="echo-l" x="155" y="54" href="#char-l" transform="translate(-1,0)" class="diy"/>
+         <use id="echo-f" x="168" y="54" href="#char-f" transform="translate(-5,0)" class="diy"/>
+      </g>
+      <g id="dotcom">
+         <use id="echo-x" x="64" y="72" href="#char-dot" class="diy"/>
+         <use id="echo-c" x="77" y="72" href="#char-c" class="diy"/>
+         <use id="echo-1" x="90" y="72" href="#char-sq" class="diy"/>
+         <use id="echo-m" x="103" y="72" href="#char-m" class="diy"/>
+      </g>
+   </g>
+</svg>
