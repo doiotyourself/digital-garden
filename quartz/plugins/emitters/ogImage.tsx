@@ -55,8 +55,9 @@ async function generateSocialImage(
     fonts,
     loadAdditionalAsset: async (languageCode: string, segment: string) => {
       if (languageCode === "emoji") {
-        return `data:image/svg+xml;base64,${btoa(await loadEmoji(getIconCode(segment)))}`
+        return await loadEmoji(getIconCode(segment))
       }
+
       return languageCode
     },
   })
@@ -144,13 +145,19 @@ export const CustomOgImages: QuartzEmitterPlugin<Partial<SocialImageOptions>> = 
         additionalHead: [
           (pageData) => {
             const isRealFile = pageData.filePath !== undefined
-            const userDefinedOgImagePath = pageData.frontmatter?.socialImage
+            let userDefinedOgImagePath = pageData.frontmatter?.socialImage
+
+            if (userDefinedOgImagePath) {
+              userDefinedOgImagePath = isAbsoluteURL(userDefinedOgImagePath)
+                ? userDefinedOgImagePath
+                : `https://${baseUrl}/static/${userDefinedOgImagePath}`
+            }
+
             const generatedOgImagePath = isRealFile
               ? `https://${baseUrl}/${pageData.slug!}-og-image.webp`
               : undefined
             const defaultOgImagePath = `https://${baseUrl}/static/og-image.png`
             const ogImagePath = userDefinedOgImagePath ?? generatedOgImagePath ?? defaultOgImagePath
-
             const ogImageMimeType = `image/${getFileExtension(ogImagePath) ?? "png"}`
             return (
               <>

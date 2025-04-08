@@ -16,7 +16,7 @@ const config: QuartzConfig = {
     locale: "en-AU",
     baseUrl: "doiotyourself.com",
     ignorePatterns: ["private", "templates", ".obsidian"],
-    defaultDateType: "created",
+    defaultDateType: "modified",
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,

@@ -13,6 +13,12 @@ export interface Argv {
   concurrency?: number
 }
 
+export type BuildTimeTrieData = QuartzPluginData & {
+  slug: string
+  title: string
+  filePath: string
+}
+
 export interface BuildCtx {
   buildId: string
   argv: Argv
